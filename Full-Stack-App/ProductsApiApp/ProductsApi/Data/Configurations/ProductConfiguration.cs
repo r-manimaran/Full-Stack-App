@@ -35,7 +35,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.OwnsOne(p=>p.Pricing, pricing=> 
         {
             pricing.Property(p=>p.BasePrice).IsRequired().HasColumnType("decimal(18,2)");
-            pricing.Property(p=>p.DiscountedPrice).IsRequired().HasColumnType("decimal(18,2)");
+            pricing.Property(p=>p.DiscountedPrice).IsRequired(false).HasColumnType("decimal(18,2)");
             pricing.Property(p=>p.Currency).IsRequired().HasMaxLength(3);
         });
 

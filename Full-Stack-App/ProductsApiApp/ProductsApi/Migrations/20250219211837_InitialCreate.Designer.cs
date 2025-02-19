@@ -13,8 +13,8 @@ using ProductsApi.Data;
 namespace ProductsApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250219020329_initial")]
-    partial class initial
+    [Migration("20250219211837_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -140,7 +140,7 @@ namespace ProductsApi.Migrations
                                 .HasMaxLength(3)
                                 .HasColumnType("character varying(3)");
 
-                            b1.Property<decimal>("DiscountedPrice")
+                            b1.Property<decimal?>("DiscountedPrice")
                                 .HasColumnType("decimal(18,2)");
 
                             b1.Property<bool>("IsOnSale")

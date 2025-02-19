@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProductsApi.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,7 +30,7 @@ namespace ProductsApi.Migrations
                     Details_CountryOfOrigin = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Details_Tags = table.Column<List<string>>(type: "jsonb", nullable: false),
                     Pricing_BasePrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    Pricing_DiscountedPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    Pricing_DiscountedPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
                     Pricing_Currency = table.Column<string>(type: "character varying(3)", maxLength: 3, nullable: false),
                     Pricing_IsOnSale = table.Column<bool>(type: "boolean", nullable: false),
                     Pricing_SaleEndAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),

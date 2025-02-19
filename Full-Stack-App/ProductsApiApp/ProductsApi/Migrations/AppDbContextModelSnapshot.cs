@@ -137,7 +137,7 @@ namespace ProductsApi.Migrations
                                 .HasMaxLength(3)
                                 .HasColumnType("character varying(3)");
 
-                            b1.Property<decimal>("DiscountedPrice")
+                            b1.Property<decimal?>("DiscountedPrice")
                                 .HasColumnType("decimal(18,2)");
 
                             b1.Property<bool>("IsOnSale")
