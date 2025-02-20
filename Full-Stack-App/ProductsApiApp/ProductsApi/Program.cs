@@ -106,7 +106,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-app.ApplyMigrations();
+await app.ApplyMigrations();
 
 app.UseSwaggerUI(options => {
     options.SwaggerEndpoint(

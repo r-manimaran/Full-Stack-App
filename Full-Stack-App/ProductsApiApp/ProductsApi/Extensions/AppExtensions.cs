@@ -6,11 +6,11 @@ namespace ProductsApi.Extensions;
 
 public static class AppExtensions
 {
-    public static async void ApplyMigrations(this IApplicationBuilder app)
+    public static async Task ApplyMigrations(this IApplicationBuilder app)
     {
         using var scope = app.ApplicationServices.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await dbContext.Database.EnsureCreatedAsync();
+        await dbContext.Database.MigrateAsync();
     }
 
     public static void SeedDatabase(this IApplicationBuilder app)
