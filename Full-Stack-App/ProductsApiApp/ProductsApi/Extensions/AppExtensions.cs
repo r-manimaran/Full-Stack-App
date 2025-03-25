@@ -10,7 +10,13 @@ public static class AppExtensions
     {
         using var scope = app.ApplicationServices.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await dbContext.Database.MigrateAsync();
+        // Check if there are any pending Migrations
+        var pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync();
+        if(pendingMigrations.Any())
+        {
+            // Apply the pending Migrations
+            await dbContext.Database.MigrateAsync();
+        }       
     }
 
     public static void SeedDatabase(this IApplicationBuilder app)
