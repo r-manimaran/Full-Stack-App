@@ -1,0 +1,62 @@
+﻿
+
+@using Blazored.LocalStorage
+@inject ILocalStorageService localStorage
+
+<div class="header">
+    <h1 class="app-title">@AppTitle</h1>
+    <i class="@icon" @onclick="Toggle"></i>
+</div>
+
+@code {
+    /// <summary>
+    /// The title of the application to be displayed in the header
+    /// </summary>
+    [Parameter]
+    public string AppTitle { get; set; } = string.Empty;
+    /// <summary>
+    /// Callback to notify parent component when theme is toggled
+    /// </summary>
+    [Parameter]
+    public EventCallback<bool> ToggleState { get; set; }
+    /// <summary>
+    /// CSS class for the light theme icon
+    /// </summary>
+    [Parameter]
+    public string LightIcon { get; set; } = "fas fa-sun";
+    /// <summary>
+    /// CSS class for the dark theme icon
+    /// </summary>
+    [Parameter]
+    public string DarkIcon { get; set; } = "fas fa-moon";
+    private bool isDarkMode = false;
+    private string icon = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try{
+             isDarkMode = await localStorage.GetItemAsync<bool>("IsDarkModeEnabled");
+             UpdateIcon();
+        }
+        catch {
+            isDarkMode = false;
+            await localStorage.SetItemAsync("IsDarkModeEnabled",false);
+            UpdateIcon();
+        }      
+        
+    }
+
+    private void UpdateIcon()
+    {
+        icon = isDarkMode ? LightIcon : DarkIcon;
+    }
+
+    private async Task Toggle()
+    {
+        isDarkMode = !isDarkMode;
+        await localStorage.SetItemAsync<bool>("IsDarkModeEnabled", isDarkMode);
+        icon = isDarkMode ? LightIcon : DarkIcon;
+        await ToggleState.InvokeAsync(isDarkMode);
+    }
+
+}
