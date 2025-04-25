@@ -2,7 +2,7 @@
 
 ## install Tailwind
 ```bash
-
+npm install tailwindcss @tailwindcss/cli
 ```
 
 ## Create input.css

@@ -1,0 +1,54 @@
+﻿@page "/"
+@using TodoApplication.Models
+
+<PageTitle>Todo Application</PageTitle>
+
+<div class="app-container">
+    <div class="hero">
+        <div class="container">
+            <div class="header">
+                <h1 class="app-title">ToDo</h1>
+            </div>
+
+            <div class="body-container">
+                <input type="text" placeholder="Create a new todo..."
+                @bind="todoTitle"
+                @bind:event="oninput"
+                @onkeydown="AddTodo" />
+                @foreach(var todo in todos)
+                {
+                    <div>
+                        <label>
+                            <input type="checkbox" @bind="todo.IsDone" />
+                            @todo.Title
+                        </label>
+                        <span class="remove-item" @onclick="()=> RemoveTodo(todo)">X</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Todo> todos = new List<Todo>();
+    private string todoTitle = string.Empty;
+
+    private void AddTodo(KeyboardEventArgs e)
+    {
+        if(e.Key == "Enter" && !string.IsNullOrWhiteSpace(todoTitle))
+        {
+            var newTodo = new Todo() { Title = todoTitle };
+            todos.Add(newTodo);
+            todoTitle = string.Empty;
+        }
+    }
+
+    private void RemoveTodo(Todo todo)
+    {
+        todos.Remove(todo);
+    }
+}
+
+
+
