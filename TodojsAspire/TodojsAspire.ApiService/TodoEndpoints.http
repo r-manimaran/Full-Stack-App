@@ -1,0 +1,52 @@
+@todoApiBaseUrl = https://localhost:7595/api
+# Get All Todos
+GET {{todoApiBaseUrl}}/Todo/
+
+###
+# Get By Id
+GET {{todoApiBaseUrl}}/Todo/1
+
+###
+# Create a new Todo
+POST {{todoApiBaseUrl}}/Todo
+Content-Type: application/json
+{
+    "title":"Learn Semantic Kernel",
+    "isComplete":false,
+    "priorityPosition":1
+}
+###
+POST {{todoApiBaseUrl}}/Todo
+Content-Type: application/json
+{
+    "title":"Learn LangChain",
+    "isComplete":false,
+    "priorityPosition":2
+}
+
+###
+POST {{todoApiBaseUrl}}/Todo
+Content-Type: application/json
+{
+    "title":"Learn Semantic Kernel",
+    "isComplete":false,
+    "priorityPosition":1
+}
+###
+# update the PriorityPosition
+PUT {{todoApiBaseUrl}}/Todo
+Content-Type: application/json
+{
+  "id": 3,
+  "title":"Learn Agentic AI",
+  "isComplete":true,
+  "priorityPosition":3
+}
+###
+POST {{todoApiBaseUrl}}/Todo/move-up/3
+
+
+
+
+
+
