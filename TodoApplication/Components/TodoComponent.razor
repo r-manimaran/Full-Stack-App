@@ -21,7 +21,7 @@
     public EventCallback OnCheckTodo { get; set; }
     [Parameter]
     public string RemoveAnimation { get; set; } = string.Empty;
-    private string StrikeoutClass => Todo.IsDone ? "strickeout-gradiend" : "";
+    private string StrikeoutClass => Todo.IsDone ? "strikeout-gradient" : "";
 
     private void CheckTask()
     {
