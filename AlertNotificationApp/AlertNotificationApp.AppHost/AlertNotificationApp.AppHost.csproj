@@ -12,11 +12,17 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.3.1" />
+    <PackageReference Include="Aspire.Hosting.Keycloak" Version="9.4.0-preview.1.25378.8" />
+    <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.4.0" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Sqlite" Version="9.7.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WebApi\WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="KeycloakConfiguration\" />
   </ItemGroup>
 
 </Project>
