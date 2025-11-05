@@ -29,6 +29,7 @@ import { Add as AddIcon } from '@mui/icons-material';
 import { analyticsApi } from '../services/api';
 import { Summary, PriceStats, StationStats, MonthlyStat, YearlyStat } from '../types';
 import { format } from 'date-fns';
+import StationLogo from './StationLogo';
 
 // Register Chart.js components
 ChartJS.register(
@@ -252,10 +253,13 @@ const AnalyticsDashboard: React.FC = () => {
                 ${priceStats.minPrice?.toFixed(2)}
               </Typography>
               {priceStats.minPricePurchase && (
-                <Typography variant="body2" color="textSecondary">
-                  {priceStats.minPricePurchase.fuelStation} -{' '}
-                  {format(new Date(priceStats.minPricePurchase.dateAndTime), 'MMM dd, yyyy')}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
+                  <StationLogo station={priceStats.minPricePurchase.fuelStation} size={20} />
+                  <Typography variant="body2" color="textSecondary">
+                    {priceStats.minPricePurchase.fuelStation} -{' '}
+                    {format(new Date(priceStats.minPricePurchase.dateAndTime), 'MMM dd, yyyy')}
+                  </Typography>
+                </Box>
               )}
             </Paper>
           </Box>
@@ -268,10 +272,13 @@ const AnalyticsDashboard: React.FC = () => {
                 ${priceStats.maxPrice?.toFixed(2)}
               </Typography>
               {priceStats.maxPricePurchase && (
-                <Typography variant="body2" color="textSecondary">
-                  {priceStats.maxPricePurchase.fuelStation} -{' '}
-                  {format(new Date(priceStats.maxPricePurchase.dateAndTime), 'MMM dd, yyyy')}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
+                  <StationLogo station={priceStats.maxPricePurchase.fuelStation} size={20} />
+                  <Typography variant="body2" color="textSecondary">
+                    {priceStats.maxPricePurchase.fuelStation} -{' '}
+                    {format(new Date(priceStats.maxPricePurchase.dateAndTime), 'MMM dd, yyyy')}
+                  </Typography>
+                </Box>
               )}
             </Paper>
           </Box>

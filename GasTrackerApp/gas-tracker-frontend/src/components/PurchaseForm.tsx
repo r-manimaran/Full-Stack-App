@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { gasPurchasesApi } from '../services/api';
 import { GasPurchase } from '../types';
+import StationLogo from './StationLogo';
 
 const COMMON_STATIONS = ['BJs', 'Costco', 'Circle K', 'Mobil', 'Shell', 'BP', 'Chevron', 'Exxon', 'Other'];
 
@@ -176,7 +177,10 @@ const PurchaseForm: React.FC = () => {
               >
                 {COMMON_STATIONS.map((station) => (
                   <MenuItem key={station} value={station}>
-                    {station}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <StationLogo station={station} size={24} />
+                      {station}
+                    </Box>
                   </MenuItem>
                 ))}
               </TextField>

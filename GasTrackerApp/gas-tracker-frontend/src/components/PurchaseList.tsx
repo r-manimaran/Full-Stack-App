@@ -20,6 +20,7 @@ import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon } from '@mui/ico
 import { gasPurchasesApi } from '../services/api';
 import { GasPurchase } from '../types';
 import { format } from 'date-fns';
+import StationLogo from './StationLogo';
 
 const PurchaseList: React.FC = () => {
   const navigate = useNavigate();
@@ -111,7 +112,10 @@ const PurchaseList: React.FC = () => {
                     {format(new Date(purchase.dateAndTime), 'MMM dd, yyyy HH:mm')}
                   </TableCell>
                   <TableCell>
-                    <Chip label={purchase.fuelStation} color="primary" size="small" />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <StationLogo station={purchase.fuelStation} size={28} />
+                      <Chip label={purchase.fuelStation} color="primary" size="small" />
+                    </Box>
                   </TableCell>
                   <TableCell align="right">
                     ${purchase.pricePerGallon.toFixed(2)}
