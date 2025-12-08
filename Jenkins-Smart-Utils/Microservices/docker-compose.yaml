@@ -1,0 +1,14 @@
+services:
+    consul:
+        image: hashicorp/consul:latest
+        container_name: api.Consul
+        ports:
+            - 8500:8500
+        networks:
+            - consul_app
+        command: agent -dev -client=0.0.0.0
+        environment:
+            CONSUL_BIND_INTERFACE: eth0
+networks:
+  consul_app:
+    driver: bridge
