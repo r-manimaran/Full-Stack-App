@@ -11,9 +11,9 @@ public sealed class AppClient
         _httpClient = client;
     }
 
-    public async Task<Response?> GetAsync(int id)
+    public async Task<Product?> GetAsync(int id)
     {
-        var response = await _httpClient.GetFromJsonAsync<Response>($"api/Product/{id}");
+        var response = await _httpClient.GetFromJsonAsync<Product>($"api/products/{id}");
         return response;
     }
 }

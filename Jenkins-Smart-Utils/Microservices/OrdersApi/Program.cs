@@ -7,7 +7,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddHttpClient<AppClient>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5000");
+    client.BaseAddress = new Uri("http://product-service:8080");
 });
 
 builder.Services.AddServiceDiscoveryConfig(builder.Configuration, "v1");
@@ -18,6 +18,11 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseSwaggerUI(options => {
+    options.SwaggerEndpoint(
+    "/openapi/v1.json", "OpenAPI v1");
+});
 
 app.UseHttpsRedirection();
 
@@ -44,7 +49,7 @@ app.MapGet("/orders", () =>
 }).WithName("GetOrders");
 
 
-app.MapGet("/products/{id}", async (int id, AppClient client) =>
+app.MapGet("/product/{id}", async (int id, AppClient client) =>
 {
     var response = await client.GetAsync(id);
     return response is not null ? Results.Ok(response) : Results.NotFound();

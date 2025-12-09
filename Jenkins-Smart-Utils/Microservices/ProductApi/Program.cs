@@ -20,7 +20,9 @@ app.UseSwaggerUI(options => {
     "/openapi/v1.json", "OpenAPI v1");
 });
 
-app.MapGet("/products", () =>
+app.MapGet("/health", () => Results.Ok("Healthy"));
+
+app.MapGet("/api/products", () =>
 {
   
     return new[] { new
@@ -39,7 +41,7 @@ app.MapGet("/products", () =>
 })
 .WithName("GetProducts");
 
-app.MapGet("/products/{id}", (int id) =>
+app.MapGet("/api/products/{id}", (int id) =>
 {
     var products = new[]
     {
