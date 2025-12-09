@@ -3,12 +3,53 @@ services:
         image: hashicorp/consul:latest
         container_name: api.Consul
         ports:
-            - 8500:8500
+            - "8500:8500" # Consul UI
+            - "8600:8600/udp" # Consul DNS
         networks:
             - consul_app
-        command: agent -dev -client=0.0.0.0
+        command: "agent -dev -client=0.0.0.0"
         environment:
             CONSUL_BIND_INTERFACE: eth0
+
+    product-service:
+        build:
+            context: .
+            dockerfile: ProductApi/Dockerfile
+        container_name: api.ProductService
+        ports:
+            - 5001:8080
+        networks:
+            - consul_app
+        depends_on:
+            - consul
+        environment:
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme: "http"
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Host: "consul"
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Port: "8500"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Scheme: "http"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "product-service"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName: "ProductApi"
+    order-service:
+        build:
+            context: .
+            dockerfile: OrdersApi/Dockerfile
+        container_name: api.OrderService
+        ports:
+            - 5002:8080
+        networks:
+            - consul_app
+        depends_on:
+            - consul
+        environment:
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme: "http"
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Host: "consul"
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Port: "8500"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Scheme: "http"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "order-service"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName: "OrderApi"
+        
 networks:
   consul_app:
     driver: bridge

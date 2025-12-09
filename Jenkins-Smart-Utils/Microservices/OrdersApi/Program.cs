@@ -1,3 +1,4 @@
+using OrdersApi.Extensions;
 using OrdersApi.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,8 @@ builder.Services.AddHttpClient<AppClient>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:5000");
 });
+
+builder.Services.AddServiceDiscoveryConfig(builder.Configuration, "v1");
 
 var app = builder.Build();
 
