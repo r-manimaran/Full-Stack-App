@@ -1,4 +1,4 @@
-def call(String imageName, string path){
+def call(String imageName, String path){
     sh """
         cd ${path}
         docker build -t ${imageName}:latest .
