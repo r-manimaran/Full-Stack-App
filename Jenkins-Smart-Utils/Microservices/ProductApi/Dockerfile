@@ -15,7 +15,6 @@ WORKDIR /src
 COPY ["ProductApi.csproj", "./"]
 RUN dotnet restore "./ProductApi.csproj"
 COPY . .
-WORKDIR "/src/ProductApi"
 RUN dotnet build "./ProductApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
