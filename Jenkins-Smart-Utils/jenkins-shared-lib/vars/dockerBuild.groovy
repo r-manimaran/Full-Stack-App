@@ -1,6 +1,6 @@
 def call(String imageName, String path){
     sh """
-        cd ${path}
-        docker build -t ${imageName}:latest .
+        cd Jenkins-Smart-Utils/Microservices
+        docker build -f ${path}/Dockerfile -t ${imageName}:latest .
     """
 }
