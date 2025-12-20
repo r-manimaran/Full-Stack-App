@@ -1,0 +1,42 @@
+{
+    "family": "consul-server",
+    "networkMode": "host",
+    "requiresCompatibilities": ["EC2"],
+    "cpu": "512",
+    "memory": "1024",
+    "containerDefinitions": [
+        {
+            "name": "consul-server",
+            "image":  "<ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/consul:1.16",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 8500,
+                    "hostPort": 8500                    
+                },
+                {
+                    "containerPort": 8300,
+                    "hostPort": 8300                    
+                },
+                {
+                    "containerPort": 8301,
+                    "hostPort": 8301
+                },
+                {
+                    "containerPort": 8302,
+                    "hostPort": 8302
+                }
+            ],
+            "command": [
+                "agent",
+                "-server",
+                "-bootstrap-expect=3",
+                "-data-dir=/consul/data",
+                "-client=0.0.0.0",
+                "-ui",
+                "-bind={{ GetInterfaceIP \"eth0\" }}",
+                "-retry-join=provider=aws tag_key=ConsulCluster tag_value=true"
+            ]
+        }
+    ]
+}

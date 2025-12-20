@@ -1,0 +1,45 @@
+{
+    "family":"order-api",
+    "requiresCompatibilities":["FARGATE"],
+    "networkMode":"awsvpc",
+    "cpu":"512",
+    "memory":"1024",
+    "containerDefinitions":[
+        {
+            "name":"order-api",
+            "image":"395109667422.dkr.ecr.us-east-1.amazonaws.com/microservices/orderapi:latest",
+            "essential":true,
+            "portMappings":[
+                {
+                    "containerPort":8080                    
+                }
+            ],
+            "environment":[
+                {
+                    "name":"CONSUL_HTTP_ADDR",
+                    "value":"http://consul-server:8500"
+                },
+                {
+                    "name":"SERVICE_NAME",
+                    "value":"order-api"
+                },
+                {
+                    "name":"PRODUCT_API_URL",
+                    "value":"http://product-api:7001"
+                }
+            ]
+        },
+        {
+            "name":"consul-agent",
+            "image":"395109667422.dkr.ecr.us-east-1.amazonaws.com/consul:1.16",
+            "essential":true,
+            "command":[
+                "agent",
+                "-data-dir=/consul/data",
+                "-client=0.0.0.0",
+                "-retry-join=consul-server.internal"
+            ]
+        }
+    ]
+
+}

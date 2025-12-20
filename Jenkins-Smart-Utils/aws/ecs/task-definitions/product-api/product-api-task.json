@@ -1,0 +1,36 @@
+{
+    "family": "product-api",
+    "requiresCompatibilities": ["FARGATE"],
+    "networkMode": "awsvpc",
+    "cpu": "256",
+    "memory": "512",
+    "containerDefinitions": [
+        {
+            "name": "product-api",
+            "image": "395109667422.dkr.ecr.us-east-1.amazonaws.com/microservices/productapi:latest",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 7001                    
+                }
+            ],
+            "environment": [
+                {
+                    "name": "CONSUL_ADDRESS",
+                    "value": "http://consul-server:8500"
+                }
+            ]
+        },
+        {
+            "name": "consul-agent",
+            "image": "395109667422.dkr.ecr.us-east-1.amazonaws.com/consul:1.16",
+            "essential": true,
+            "command": [
+                "agent",
+                "-data-dir=/consul/data",
+                "-client=0.0.0.0",
+                "-retry-join=consul-server.internal"
+            ]
+        }
+    ]
+}

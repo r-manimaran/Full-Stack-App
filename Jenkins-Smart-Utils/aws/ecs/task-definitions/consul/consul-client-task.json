@@ -1,0 +1,17 @@
+{
+    "name":"consul-client",
+    "image":"<ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/consul:1.16",
+    "essential":true,
+    "command":[
+        "agent",
+        "-retry-join=<EC2_INSTANCE_PRIVATE_IP>",
+        "-data-dir=/consul/data",
+        "-client=0.0.0.0"
+    ],
+    "portMappings":[
+        {
+            "containerPort":8500,
+             "protocol":"tcp"
+        }
+    ]
+}
