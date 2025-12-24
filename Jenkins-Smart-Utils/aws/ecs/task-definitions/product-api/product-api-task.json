@@ -1,36 +1,86 @@
 {
-    "family": "product-api",
-    "requiresCompatibilities": ["FARGATE"],
-    "networkMode": "awsvpc",
-    "cpu": "256",
-    "memory": "512",
     "containerDefinitions": [
         {
             "name": "product-api",
             "image": "395109667422.dkr.ecr.us-east-1.amazonaws.com/microservices/productapi:latest",
+            "cpu": 0,
             "essential": true,
             "portMappings": [
                 {
-                    "containerPort": 7001                    
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "name": "product-api"
                 }
             ],
             "environment": [
                 {
-                    "name": "CONSUL_ADDRESS",
-                    "value": "http://consul-server:8500"
+                    "name": "ServiceDiscoveryConfiguration__ConsulConfiguration__Host",
+                    "value": "172.31.85.143"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ConsulConfiguration__Port",
+                    "value": "8500"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme",
+                    "value": "http"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName",
+                    "value": "products-api"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Host",
+                    "value": "products-api"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Port",
+                    "value": "8080"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Scheme",
+                    "value": "http"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Version",
+                    "value": "1.0"
+                },
+                {
+                    "name": "ASPNETCORE_ENVIRONMENT",
+                    "value": "Development"
+                },
+                {
+                    "name": "ASPNETCORE_URLS",
+                    "value": "http://+:8080"
                 }
-            ]
-        },
-        {
-            "name": "consul-agent",
-            "image": "395109667422.dkr.ecr.us-east-1.amazonaws.com/consul:1.16",
-            "essential": true,
-            "command": [
-                "agent",
-                "-data-dir=/consul/data",
-                "-client=0.0.0.0",
-                "-retry-join=consul-server.internal"
-            ]
+            ],
+            "mountPoints": [],
+            "volumesFrom":[],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/aws/ecs/product-api",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls":[]
         }
-    ]
+    ],
+    "family": "product-api",
+    "taskRoleArn": "arn:aws:iam::395109667422:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::395109667422:role/microservices-ecs-task-execution-role",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512"
 }
