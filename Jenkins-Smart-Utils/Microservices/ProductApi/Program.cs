@@ -15,10 +15,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// app.UseSwaggerUI(options => {
-//     options.SwaggerEndpoint(
-//     "/openapi/v1.json", "OpenAPI v1");
-// });
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint(
+    "/openapi/v1.json", "OpenAPI v1");
+});
 
 app.MapGet("/health", () => Results.Ok("Healthy"));
 
