@@ -44,13 +44,13 @@ public class ServiceDiscoveryHostedService : BackgroundService
             Address = serviceCfg.Host,
             Port = serviceCfg.Port,
             //Tags = new[] { $"version={serviceCfg.Version}" },
-            Tags = new[] { $"urlprefix-/{_serviceDiscoveryConfiguration.ServiceConfiguration.ServiceName} strip=/{_serviceDiscoveryConfiguration.ServiceConfiguration.ServiceName}" },
-            Check = new AgentServiceCheck()
+            Tags = new[] { $"urlprefix-/{_serviceDiscoveryConfiguration.ServiceConfiguration.ServiceName} strip=/{_serviceDiscoveryConfiguration.ServiceConfiguration.ServiceName}" }
+           /* Check = new AgentServiceCheck()
             {
                 HTTP = $"{_serviceDiscoveryConfiguration.ServiceConfiguration.Scheme}://{_serviceDiscoveryConfiguration.ServiceConfiguration.Host}:{_serviceDiscoveryConfiguration.ServiceConfiguration.Port}/health",
                 Interval = TimeSpan.FromSeconds(30),
                 DeregisterCriticalServiceAfter = TimeSpan.FromMinutes(1)
-            }
+            }*/
         };
         _logger.LogInformation("Registering service {ServiceName} ({RegistrationId}) at {Address}:{Port}", registration.Name, registration.ID, registration.Address, registration.Port);
         await _consulClient.Agent.ServiceRegister(registration, cancellationToken);
