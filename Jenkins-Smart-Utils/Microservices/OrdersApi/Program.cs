@@ -5,12 +5,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddServiceDiscoveryConfig(builder.Configuration, "v1");
+
+var productServiceUrl = builder.Configuration.GetValue<string>("ServiceDiscoveryConfiguration:ProductsApiConfiguration:BaseUrl") ?? "http://product-service:8080";
+
 builder.Services.AddHttpClient<AppClient>(client =>
 {
-    client.BaseAddress = new Uri("http://product-service:8080");
+    client.BaseAddress = new Uri(productServiceUrl);
 });
-
-builder.Services.AddServiceDiscoveryConfig(builder.Configuration, "v1");
 
 var app = builder.Build();
 
