@@ -37,8 +37,8 @@ public sealed class AppClient
         }
         _logger.LogInformation("Discovered Products API service at {ServiceAddress}:{ServicePort}", service.Service.Address, service.Service.Port);
         _logger.LogInformation("Temporary: Using hardcoded URL for testing instead of discovered service.");
-        // var baseUrl = $"http://{service.Service.Address}:{service.Service.Port}";
-        var baseUrl = "http://172.31.57.64:8080"; // Temporary hardcoded URL for testing
+        var baseUrl = $"http://{service.Service.Address}:{service.Service.Port}";
+        //var baseUrl = "http://172.31.57.64:8080"; // Temporary hardcoded URL for testing
         var response = await _httpClient.GetFromJsonAsync<Product>($"{baseUrl}/api/products/{id}");
         return response;
     }
