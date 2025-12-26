@@ -35,10 +35,14 @@ public sealed class AppClient
             _logger.LogError("Products API service not found in Consul.");
             throw new Exception("Products API service not found in Consul.");           
         }
+
         _logger.LogInformation("Discovered Products API service at {ServiceAddress}:{ServicePort}", service.Service.Address, service.Service.Port);
-        _logger.LogInformation("Temporary: Using hardcoded URL for testing instead of discovered service.");
-        var baseUrl = $"http://{service.Service.Address}:{service.Service.Port}";
-        //var baseUrl = "http://172.31.57.64:8080"; // Temporary hardcoded URL for testing
+
+        var ipAddress = service.Service.Address;
+        var port = service.Service.Port;
+        _logger.LogInformation("Products API IP Address: {IPAddress}, Port: {Port}", ipAddress, port);
+        // _logger.LogInformation("Temporary: Using hardcoded URL for testing instead of discovered service.");
+        var baseUrl = $"http://{ipAddress}:{port}";
         var response = await _httpClient.GetFromJsonAsync<Product>($"{baseUrl}/api/products/{id}");
         return response;
     }
