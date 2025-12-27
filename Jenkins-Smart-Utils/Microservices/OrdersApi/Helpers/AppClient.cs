@@ -35,15 +35,23 @@ public sealed class AppClient
             _logger.LogError("Products API service not found in Consul.");
             throw new Exception("Products API service not found in Consul.");           
         }
+        // Get the node information to find the actual IP address
+        var nodeInfo = await _consul.Catalog.Node(service.Node);
+        var nodeAddress = nodeInfo.Response?.Node?.Address;
+        if(string.IsNullOrEmpty(nodeAddress))
+        {
+            _logger.LogError("Node address not found for node {NodeName}.", service.Node);
+            throw  new Exception($"Node address not found for node {service.Node}.");
+        }
 
         _logger.LogInformation("Discovered Products API service at {ServiceAddress}:{ServicePort}", service.ServiceAddress, service.ServicePort);
 
-        var ipAddress = service.ServiceAddress ?? service.Address;
+        //var ipAddress = service.ServiceAddress ?? service.Address;
         var port = service.ServicePort;
 
-        _logger.LogInformation("Products API IP Address: {IPAddress}, Port: {Port}", ipAddress, port);
+        _logger.LogInformation("Products API IP Address: {IPAddress}, Port: {Port}", nodeAddress, port);
         // _logger.LogInformation("Temporary: Using hardcoded URL for testing instead of discovered service.");
-        var baseUrl = $"http://{ipAddress}:{port}";
+        var baseUrl = $"http://{nodeAddress}:{port}";
         var response = await _httpClient.GetFromJsonAsync<Product>($"{baseUrl}/api/products/{id}");
         return response;
     }
