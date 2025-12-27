@@ -28,18 +28,19 @@ public sealed class AppClient
         }
 
         // Get services from Consul
-        var services = await _consul.Health.Service("products-api", string.Empty, true);
-        var service = services.Response.FirstOrDefault();
+        var catalogServices = await _consul.Catalog.Service("products-api");//, string.Empty, true);
+        var service = catalogServices.Response.FirstOrDefault();
         if (service == null)
         {
             _logger.LogError("Products API service not found in Consul.");
             throw new Exception("Products API service not found in Consul.");           
         }
 
-        _logger.LogInformation("Discovered Products API service at {ServiceAddress}:{ServicePort}", service.Service.Address, service.Service.Port);
+        _logger.LogInformation("Discovered Products API service at {ServiceAddress}:{ServicePort}", service.ServiceAddress, service.ServicePort);
 
-        var ipAddress = service.Service.Address;
-        var port = service.Service.Port;
+        var ipAddress = service.ServiceAddress ?? service.Address;
+        var port = service.ServicePort;
+
         _logger.LogInformation("Products API IP Address: {IPAddress}, Port: {Port}", ipAddress, port);
         // _logger.LogInformation("Temporary: Using hardcoded URL for testing instead of discovered service.");
         var baseUrl = $"http://{ipAddress}:{port}";

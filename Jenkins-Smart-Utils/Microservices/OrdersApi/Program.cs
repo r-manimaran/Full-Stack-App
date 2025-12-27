@@ -1,5 +1,7 @@
+using OrdersApi;
 using OrdersApi.Extensions;
 using OrdersApi.Helpers;
+using SharedLib;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +59,13 @@ app.MapGet("/product/{id}", async (int id, AppClient client) =>
     var response = await client.GetAsync(id);
     return response is not null ? Results.Ok(response) : Results.NotFound();
 }).WithName("GetProductById");
+
+app.MapPost("/orders", (Order newOrder) =>
+{
+    // save the order to Database
+    var newOrderEvent = new OrderCreated(newOrder.Id, newOrder.ProductName, newOrder.Quantity, newOrder.TotalPrice, DateTime.UtcNow);
+
+});
 
 
 app.Run();

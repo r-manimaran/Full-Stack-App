@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrdersApi", "OrdersApi\Orde
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLib", "SharedLib\SharedLib.csproj", "{45794058-ED36-4803-B063-31206E627233}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationsApi", "NotificationsApi\NotificationsApi.csproj", "{FB2C2129-0342-4F51-8884-9B7EA56C7E35}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,8 +57,23 @@ Global
 		{45794058-ED36-4803-B063-31206E627233}.Release|x64.Build.0 = Release|Any CPU
 		{45794058-ED36-4803-B063-31206E627233}.Release|x86.ActiveCfg = Release|Any CPU
 		{45794058-ED36-4803-B063-31206E627233}.Release|x86.Build.0 = Release|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Debug|x64.Build.0 = Debug|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Debug|x86.Build.0 = Debug|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Release|x64.ActiveCfg = Release|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Release|x64.Build.0 = Release|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Release|x86.ActiveCfg = Release|Any CPU
+		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B160F2D1-15AB-4049-A4FF-E20DB22E753A}
 	EndGlobalSection
 EndGlobal
