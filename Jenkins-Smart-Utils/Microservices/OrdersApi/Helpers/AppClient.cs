@@ -28,31 +28,46 @@ public sealed class AppClient
         }
 
         // Get services from Consul
-        var catalogServices = await _consul.Catalog.Service("products-api");//, string.Empty, true);
+        var catalogServices = await _consul.Health.Service("products-api", string.Empty, true);
         var service = catalogServices.Response.FirstOrDefault();
         if (service == null)
         {
             _logger.LogError("Products API service not found in Consul.");
             throw new Exception("Products API service not found in Consul.");           
         }
-        // Get the node information to find the actual IP address
-        var nodeInfo = await _consul.Catalog.Node(service.Node);
-        var nodeAddress = nodeInfo.Response?.Node?.Address;
-        if(string.IsNullOrEmpty(nodeAddress))
+        // Use ServiceAddress if available, otherwise fall back to Node Address
+    var serviceAddress = !string.IsNullOrEmpty(service.Service.Address) 
+        ? service.Service.Address 
+        : service.Node.Address;
+        var port = service.Service.Port;
+
+     _logger.LogInformation("Products API resolved to: {Address}:{Port}", serviceAddress, port);
+        // If we still get a hostname, try to resolve it or use a fallback
+    if (serviceAddress == "products-api")
+    {
+        _logger.LogWarning("Service address is hostname, trying alternative resolution...");
+        
+        // Try to get all nodes and find the one with the service
+        var nodes = await _consul.Catalog.Nodes();
+        foreach (var node in nodes.Response)
         {
-            _logger.LogError("Node address not found for node {NodeName}.", service.Node);
-            throw  new Exception($"Node address not found for node {service.Node}.");
+            var nodeServices = await _consul.Catalog.Node(node.Name);
+            var targetService = nodeServices.Response?.Services?.Values
+                .FirstOrDefault(s => s.Service == "products-api");
+            
+            if (targetService != null)
+            {
+                serviceAddress = node.Address;
+                _logger.LogInformation("Found service on node {NodeName} with IP {NodeAddress}", 
+                    node.Name, serviceAddress);
+                break;
+            }
         }
+    }
 
-        _logger.LogInformation("Discovered Products API service at {ServiceAddress}:{ServicePort}", service.ServiceAddress, service.ServicePort);
-
-        //var ipAddress = service.ServiceAddress ?? service.Address;
-        var port = service.ServicePort;
-
-        _logger.LogInformation("Products API IP Address: {IPAddress}, Port: {Port}", nodeAddress, port);
-        // _logger.LogInformation("Temporary: Using hardcoded URL for testing instead of discovered service.");
-        var baseUrl = $"http://{nodeAddress}:{port}";
-        var response = await _httpClient.GetFromJsonAsync<Product>($"{baseUrl}/api/products/{id}");
-        return response;
+    var baseUrl = $"http://{serviceAddress}:{port}";
+    var response = await _httpClient.GetFromJsonAsync<Product>($"{baseUrl}/api/products/{id}");
+    return response;
+        
     }
 }
