@@ -1,0 +1,69 @@
+{
+    "containerDefinitions": [
+        {
+            "name": "rabbitmq-service",
+            "image": "395109667422.dkr.ecr.us-east-1.amazonaws.com/rabbitmq-repo:3.13.0-management",
+            "memory": 512,
+            "cpu": 0,
+           "portMappings": [
+                {
+                    "containerPort": 5672,
+                    "hostPort": 5672,
+                    "protocol": "tcp",
+                    "name":"rabbitmq-amqp"
+                },
+                {
+                    "containerPort": 15672,
+                    "hostPort": 15672,
+                    "protocol": "tcp",
+                    "name":"rabbitmq-management"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "RABBITMQ_NODE_IP_ADDRESS",
+                    "value": "0.0.0.0"
+                },
+                {
+                    "name":"RABBITMQ_PLUGINS",
+                    "value":"rabbitmq_management"
+                },
+                {
+                    "name": "RABBITMQ_DEFAULT_USER",
+                    "value": "rabbit"
+                },
+                {
+                    "name": "RABBITMQ_DEFAULT_PASS",
+                    "value": "P@ssw0rd!"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/aws/ecs//rabbitmq-service",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "rabbitmq-service"
+                }
+            },
+            "systemControls": []
+        }
+    ],
+    "family": "ecs-rabbitmq-service",
+     "taskRoleArn":"arn:aws:iam::395109667422:role/ecsTaskExecutionRole",
+    "executionRoleArn":"arn:aws:iam::395109667422:role/microservices-ecs-task-execution-role",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "cpu": "512",
+    "memory": "1024"
+}
