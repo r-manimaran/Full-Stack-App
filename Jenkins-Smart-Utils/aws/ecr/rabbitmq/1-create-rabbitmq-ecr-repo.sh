@@ -1,0 +1,1 @@
+aws ecr create-repository --repository-name rabbitmq-repo --region us-east-1
