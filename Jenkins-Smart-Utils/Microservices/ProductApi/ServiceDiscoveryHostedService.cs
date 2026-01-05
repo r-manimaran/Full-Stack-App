@@ -35,13 +35,16 @@ public class ServiceDiscoveryHostedService : BackgroundService
     private async Task RegisterServiceAsync(CancellationToken cancellationToken)
     {
         var serviceCfg = _serviceDiscoveryConfiguration.ServiceConfiguration;
+        // get the actual IP address instead of using configured hostname
+        var actualIpAddress = GetLocalIpAddress();
+
         _logger.LogInformation("Service configuration: Name={ServiceName}, Host={Host}, Port={Port}, Scheme={Scheme}, Version={Version}",
             serviceCfg.ServiceName, serviceCfg.Host, serviceCfg.Port, serviceCfg.Scheme, serviceCfg.Version);
         var registration = new AgentServiceRegistration()
         {
             ID = _registrationId,
             Name = serviceCfg.ServiceName,
-            Address = serviceCfg.Host,
+            Address = actualIpAddress,
             Port = serviceCfg.Port,
             //Tags = new[] { $"version={serviceCfg.Version}" },
             Tags = new[] { $"urlprefix-/{_serviceDiscoveryConfiguration.ServiceConfiguration.ServiceName} strip=/{_serviceDiscoveryConfiguration.ServiceConfiguration.ServiceName}" }
@@ -55,6 +58,21 @@ public class ServiceDiscoveryHostedService : BackgroundService
         _logger.LogInformation("Registering service {ServiceName} ({RegistrationId}) at {Address}:{Port}", registration.Name, registration.ID, registration.Address, registration.Port);
         await _consulClient.Agent.ServiceRegister(registration, cancellationToken);
         _logger.LogInformation("Service {ServiceName} registered with Consul successfully.", serviceCfg.ServiceName);
+    }
+
+    private string GetLocalIpAddress()
+    {
+        try
+        {
+            using var socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Dgram, 0);
+            socket.Connect("8.8.8.8", 65530);
+            var endPoint = socket.LocalEndPoint as System.Net.IPEndPoint;
+            return endPoint?.Address.ToString() ?? "127.0.0.1";
+        }
+        catch
+        {
+            return "127.0.0.1";
+        }
     }
 
 
