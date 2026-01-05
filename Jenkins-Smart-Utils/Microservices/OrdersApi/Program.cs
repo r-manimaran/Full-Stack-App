@@ -63,8 +63,11 @@ app.MapGet("/product/{id}", async (int id, AppClient client) =>
 app.MapPost("/orders", (Order newOrder) =>
 {
     // save the order to Database
-    var newOrderEvent = new OrderCreated(newOrder.Id, newOrder.ProductName, newOrder.Quantity, newOrder.TotalPrice, DateTime.UtcNow);
 
+    var newOrderEvent = new OrderCreated(newOrder.Id, newOrder.ProductName, newOrder.Quantity, newOrder.TotalPrice, DateTime.UtcNow);
+   
+    // publish event to message broker (e.g., RabbitMQ, Kafka, etc.)
+    return Results.Created($"/orders/{newOrder.Id}", newOrder);
 });
 
 

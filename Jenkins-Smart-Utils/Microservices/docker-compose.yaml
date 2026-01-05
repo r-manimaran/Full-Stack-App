@@ -49,6 +49,35 @@ services:
             ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "order-service"
             ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
             ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName: "OrderApi"
+
+    notification-service:
+        build:
+            context: .
+            dockerfile: NotificationsApi/Dockerfile
+        container_name: api.NotificationsService
+        ports:
+            - 5003:8080
+        networks:
+            - consul_app
+        depends_on:
+            - consul
+        environment:
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme: "http"
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Host: "consul"
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Port: "8500"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Scheme: "http"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "notifications-service"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName: "NotificationsApi"
+
+    rabbitmq:
+        image: "rabbitmq:3-management"
+        container_name: api.RabbitMQ
+        ports:
+            - "5672:5672" # RabbitMQ Broker
+            - "15672:15672" # RabbitMQ Management UI
+        networks:
+            - consul_app
         
 networks:
   consul_app:
