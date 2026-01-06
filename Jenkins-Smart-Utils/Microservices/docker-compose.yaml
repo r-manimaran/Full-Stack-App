@@ -76,8 +76,26 @@ services:
         ports:
             - "5672:5672" # RabbitMQ Broker
             - "15672:15672" # RabbitMQ Management UI
+        environment:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASS: guest
         networks:
             - consul_app
+
+    dozzle:
+        image: amir20/dozzle:latest
+        container_name: api.Dozzle
+        ports:
+            - "9999:8080"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+            - consul_app
+        depends_on:
+            - product-service
+            - order-service
+            - notification-service
+            - rabbitmq
         
 networks:
   consul_app:
