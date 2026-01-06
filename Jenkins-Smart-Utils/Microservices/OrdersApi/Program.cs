@@ -1,11 +1,17 @@
 using OrdersApi;
 using OrdersApi.Extensions;
 using OrdersApi.Helpers;
+using OrdersApi.Publishers;
 using SharedLib;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+
+// Add after builder.Services.AddOpenApi();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+
 
 builder.Services.AddServiceDiscoveryConfig(builder.Configuration, "v1");
 
@@ -17,6 +23,8 @@ builder.Services.AddHttpClient<AppClient>();
 //    client.BaseAddress = new Uri(productServiceUrl);
 //});
 
+builder.Services.AddOrderEventPublisher(builder.Configuration);
+    
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -60,15 +68,28 @@ app.MapGet("/product/{id}", async (int id, AppClient client) =>
     return response is not null ? Results.Ok(response) : Results.NotFound();
 }).WithName("GetProductById");
 
-app.MapPost("/orders", (Order newOrder) =>
-{
-    // save the order to Database
 
-    var newOrderEvent = new OrderCreated(newOrder.Id, newOrder.ProductName, newOrder.Quantity, newOrder.TotalPrice, DateTime.UtcNow);
-   
-    // publish event to message broker (e.g., RabbitMQ, Kafka, etc.)
-    return Results.Created($"/orders/{newOrder.Id}", newOrder);
+app.MapPost("/orders", async (Order newOrder, IOrderEventPublisher publisher, ILogger<Program> logger) =>
+{
+    logger.LogInformation("Received order: {OrderId}, {ProductName}", newOrder.Id, newOrder.ProductName);
+
+    try
+    {
+        var newOrderEvent = new OrderCreated(newOrder.Id, newOrder.ProductName, newOrder.Quantity, newOrder.TotalPrice, DateTime.UtcNow);
+
+        logger.LogInformation("Publishing OrderCreated event for OrderId: {OrderId}", newOrder.Id);
+        await publisher.PublishAsync(newOrderEvent);
+        logger.LogInformation("Successfully published OrderCreated event for OrderId: {OrderId}", newOrder.Id);
+
+        return Results.Created($"/orders/{newOrder.Id}", newOrder);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Failed to publish OrderCreated event for OrderId: {OrderId}", newOrder.Id);
+        return Results.Problem("Failed to process order");
+    }
 });
+
 
 
 app.Run();
