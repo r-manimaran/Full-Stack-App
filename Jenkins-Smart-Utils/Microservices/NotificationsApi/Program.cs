@@ -4,6 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddOrderEventConsumer(builder.Configuration);
+
 builder.Services.AddServiceDiscoveryConfig(builder.Configuration, "v1");
 
 var app = builder.Build();
