@@ -1,3 +1,4 @@
+using Bogus;
 using ProductApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +7,18 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddServiceDiscoveryConfig(builder.Configuration, "v1");
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
+
+app.UseCors();
 
 if (app.Environment.IsDevelopment())
 {
@@ -25,43 +37,38 @@ app.MapGet("/health", () => Results.Ok("Healthy"));
 
 app.MapGet("/api/products", () =>
 {
-  
-    return new[] { new
-        {
-            Id=1,
-            Name = "Product 1",
-            Price = 9.99
-        },
-        new
-        {
-            Id=2,
-            Name = "Product 2",
-            Price = 19.99
-        }
-    };
+
+    var faker = new Faker();
+
+    var products = Enumerable.Range(1, 10).Select(i => new
+    {
+        Id = i,
+        Name = faker.Commerce.ProductName(),
+        Price = Math.Round(faker.Random.Double(5.0, 99.99), 2)
+    }).ToArray();
+    
+    return Results.Ok(products);
+    
 })
 .WithName("GetProducts");
 
 app.MapGet("/api/products/{id}", (int id) =>
 {
-    var products = new[]
+    var faker = new Faker();
+    
+    if (id < 1 || id > 10) return Results.NotFound();
+    
+    var product = new
     {
-        new
-        {
-            Id=1,
-            Name = "Product 1",
-            Price = 9.99
-        },
-        new
-        {
-            Id=2,
-            Name = "Product 2",
-            Price = 19.99
-        }
+        Id = id,
+        Name = faker.Commerce.ProductName(),
+        Price = Math.Round(faker.Random.Double(5.0, 99.99), 2)
     };
-    var product = products.FirstOrDefault(p => p.Id == id);
-    return product is not null ? Results.Ok(product) : Results.NotFound();
+    
+    return Results.Ok(product);
 });
 
 app.Run();
+
+
 
