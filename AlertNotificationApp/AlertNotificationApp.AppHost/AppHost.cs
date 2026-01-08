@@ -12,9 +12,10 @@ var username = builder.AddParameter("keycloak-username", "admin")
 var password = builder.AddParameter("keycloak-password", "admin", secret: true);
 
 
-var keycloak = builder.AddKeycloak("keycloak", 8080, username, password)
+var keycloak = builder.AddKeycloak("keycloak", 8081, username, password)
                       .WithDataVolume()
-                      .WithExternalHttpEndpoints();
+                      .WithExternalHttpEndpoints()
+                      .WithArgs("--http-cors-origins=http://localhost:4200");
                       //.WithRealmImport("./KeycloakConfiguration");
 
 var apiService = builder.AddProject<Projects.WebApi>("webapi")
@@ -31,6 +32,7 @@ builder
     .WithReference(apiService)
     .WithEndpoint(4200, scheme: "http", env: "PORT")
     .WithExternalHttpEndpoints()
+    .WithReference(apiService)
     .PublishAsDockerFile();
 
 builder.Build().Run();

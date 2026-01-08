@@ -1,45 +1,89 @@
 {
-    "family":"order-api",
-    "requiresCompatibilities":["FARGATE"],
-    "networkMode":"awsvpc",
-    "cpu":"512",
-    "memory":"1024",
-    "containerDefinitions":[
+   "containerDefinitions":[
         {
-            "name":"order-api",
+            "name":"orders-api",
             "image":"395109667422.dkr.ecr.us-east-1.amazonaws.com/microservices/orderapi:latest",
             "essential":true,
             "portMappings":[
                 {
-                    "containerPort":8080                    
+                   "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "name": "orders-api"                 
                 }
             ],
             "environment":[
-                {
-                    "name":"CONSUL_HTTP_ADDR",
-                    "value":"http://consul-server:8500"
+               {
+                    "name": "ServiceDiscoveryConfiguration__ConsulConfiguration__Host",
+                    "value": "172.31.6.190"
                 },
                 {
-                    "name":"SERVICE_NAME",
-                    "value":"order-api"
+                    "name": "ServiceDiscoveryConfiguration__ConsulConfiguration__Port",
+                    "value": "8500"
                 },
                 {
-                    "name":"PRODUCT_API_URL",
-                    "value":"http://product-api:7001"
+                    "name": "ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme",
+                    "value": "http"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName",
+                    "value": "orders-api"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Host",
+                    "value": "orders-api"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Port",
+                    "value": "8080"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Scheme",
+                    "value": "http"
+                },
+                {
+                    "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Version",
+                    "value": "1.0"
+                },
+                {
+                    "name":"ServiceDiscoveryConfiguration__ProductsApiConfiguration__BaseUrl",
+                    "value":"http://products-api:8080"
+                },
+                {
+                    "name": "ASPNETCORE_ENVIRONMENT",
+                    "value": "Development"
+                },
+                {
+                    "name": "ASPNETCORE_URLS",
+                    "value": "http://+:8080"
                 }
-            ]
-        },
-        {
-            "name":"consul-agent",
-            "image":"395109667422.dkr.ecr.us-east-1.amazonaws.com/consul:1.16",
-            "essential":true,
-            "command":[
-                "agent",
-                "-data-dir=/consul/data",
-                "-client=0.0.0.0",
-                "-retry-join=consul-server.internal"
-            ]
-        }
-    ]
-
+            ],
+            "mountPoints": [],
+            "volumesFrom":[],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/aws/ecs/order-api",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls":[]
+        }        
+    ],
+    "family": "order-api",
+    "taskRoleArn": "arn:aws:iam::395109667422:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::395109667422:role/microservices-ecs-task-execution-role",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512"
 }

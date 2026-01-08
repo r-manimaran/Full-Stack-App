@@ -26,7 +26,7 @@ echo "Task execution role ARN: $TASK_EXEC_ROLE_ARN"
 
 # Attach policies to the role
 aws iam attach-role-policy \
-    --role-name "${PROJECT_NAME}-ecs-task-execution-role" \
+    --role-name "Microservices-ecs-task-execution-role" \
     --policy-arn "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 
 # Create task role (for application-specific permissions)

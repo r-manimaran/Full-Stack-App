@@ -16,7 +16,7 @@
             "environment": [
                 {
                     "name": "ServiceDiscoveryConfiguration__ConsulConfiguration__Host",
-                    "value": "172.31.85.143"
+                    "value": "172.31.6.190"
                 },
                 {
                     "name": "ServiceDiscoveryConfiguration__ConsulConfiguration__Port",
