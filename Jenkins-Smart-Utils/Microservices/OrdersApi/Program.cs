@@ -2,9 +2,18 @@ using OrdersApi;
 using OrdersApi.Extensions;
 using OrdersApi.Helpers;
 using OrdersApi.Publishers;
+using Serilog;
 using SharedLib;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+builder.Services.AddLogging();
 
 builder.Services.AddOpenApi();
 
@@ -37,7 +46,7 @@ app.UseSwaggerUI(options => {
     "/openapi/v1.json", "OpenAPI v1");
 });
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.MapGet("/health", () => Results.Ok("Healthy"));
 

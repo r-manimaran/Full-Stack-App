@@ -26,7 +26,7 @@ public static class MessagingExtensions
             {
                 cfg.Host(new Uri(configuration["Messaging:RabbitMq:Host"]), "/", h =>
                 {
-                    h.Username(configuration["Messaging:RabbitMq:Username"]);
+                    h.Username(configuration["Messaging:RabbitMq:UserName"]);
                     h.Password(configuration["Messaging:RabbitMq:Password"]);
                 });
                 cfg.ReceiveEndpoint(configuration["Messaging:RabbitMq:QueueName"], e =>

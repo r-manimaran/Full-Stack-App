@@ -30,6 +30,9 @@ services:
             ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "product-service"
             ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
             ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName: "ProductApi"
+            Logging__LogLevel__Default: "Information"
+            Logging__LogLevel__Microsoft: "Warning"
+            Serilog__MinimumLevel__Default: "Information"
     order-service:
         build:
             context: .
@@ -41,6 +44,7 @@ services:
             - consul_app
         depends_on:
             - consul
+            - rabbitmq
         environment:
             ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme: "http"
             ServiceDiscoveryConfiguration__ConsulConfiguration__Host: "consul"
@@ -49,6 +53,13 @@ services:
             ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "order-service"
             ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
             ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName: "OrderApi"
+            RabbitMq__Host: "amqp://api.RabbitMQ:5672"
+            RabbitMq__UserName: "guest"
+            RabbitMq__Password: "guest"
+            RabbitMq__QueueName: "order-created-queue"
+            Logging__LogLevel__Default: "Information"
+            Logging__LogLevel__Microsoft: "Warning"
+            Serilog__MinimumLevel__Default: "Information"
 
     notification-service:
         build:
@@ -61,6 +72,8 @@ services:
             - consul_app
         depends_on:
             - consul
+            - rabbitmq
+        restart: on-failure
         environment:
             ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme: "http"
             ServiceDiscoveryConfiguration__ConsulConfiguration__Host: "consul"
@@ -69,6 +82,13 @@ services:
             ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "notifications-service"
             ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
             ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName: "NotificationsApi"
+            Messaging__RabbitMq__Host: "amqp://api.RabbitMQ:5672"
+            Messaging__RabbitMq__UserName: "guest"
+            Messaging__RabbitMq__Password: "guest"
+            Messaging__RabbitMq__QueueName: "order-created-queue"
+            Logging__LogLevel__Default: "Information"
+            Logging__LogLevel__Microsoft: "Warning"
+            Serilog__MinimumLevel__Default: "Information"
 
     rabbitmq:
         image: "rabbitmq:3-management"
@@ -81,6 +101,11 @@ services:
             RABBITMQ_DEFAULT_PASS: guest
         networks:
             - consul_app
+        healthcheck:
+            test: rabbitmq-diagnostics -q ping
+            interval: 30s
+            timeout: 30s
+            retries: 3
 
     dozzle:
         image: amir20/dozzle:latest
