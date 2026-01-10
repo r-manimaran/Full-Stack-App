@@ -1,39 +1,3 @@
-
-#------------------------------
-# Common Logging configuration
-#------------------------------
-x-common-logging: &common-logging
-    driver: "json-file"
-    options:
-        max-size: "10m"
-        max-file: "3"
-
-#-----------------------------------
-# Common .Net Microservices template
-#------------------------------------
-
-x-dotnet-service: &dotnet-service
-    networks:
-        - consul_app
-    depends_on:
-        - consul
-    logging: *common-logging
-    restart: unless-stopped
-    deploy:
-        resources:
-            limits:
-                cpus: '0.50'
-                memory: 512M
-            reservations:
-                cpus: '0.25'
-                memory: 256M
-    environment:
-        ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme: "http"
-        ServiceDiscoveryConfiguration__ConsulConfiguration__Host: "consul"
-        ServiceDiscoveryConfiguration__ConsulConfiguration__Port: "8500"
-        ServiceDiscoveryConfiguration__ServiceConfiguration__Scheme: "http"
-        ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
-       
 services:
     consul:
         image: hashicorp/consul:latest
@@ -44,45 +8,50 @@ services:
         networks:
             - consul_app
         command: "agent -dev -client=0.0.0.0"
-        logging: *common-logging
-        healthcheck:
-            test: ["CMD-SHELL", "consul members || exit 1"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
-            start_period: 10s            
         environment:
             CONSUL_BIND_INTERFACE: eth0
 
     product-service:
-        <<: *dotnet-service
         build:
             context: .
             dockerfile: ProductApi/Dockerfile
         container_name: api.ProductService
         ports:
             - 5001:8080
-        environment:            
+        networks:
+            - consul_app
+        depends_on:
+            - consul
+        environment:
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme: "http"
             ServiceDiscoveryConfiguration__ConsulConfiguration__Host: "consul"
-            ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "product-service"            
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Port: "8500"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Scheme: "http"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "product-service"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
             ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName: "ProductApi"
             Logging__LogLevel__Default: "Information"
             Logging__LogLevel__Microsoft: "Warning"
             Serilog__MinimumLevel__Default: "Information"
     order-service:
-        <<: *dotnet-service
         build:
             context: .
             dockerfile: OrdersApi/Dockerfile
         container_name: api.OrderService
         ports:
             - 5002:8080
+        networks:
+            - consul_app
         depends_on:
             - consul
             - rabbitmq
         environment:
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme: "http"
             ServiceDiscoveryConfiguration__ConsulConfiguration__Host: "consul"
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Port: "8500"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Scheme: "http"
             ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "order-service"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
             ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName: "OrderApi"
             RabbitMq__Host: "amqp://api.RabbitMQ:5672"
             RabbitMq__UserName: "guest"
@@ -93,24 +62,30 @@ services:
             Serilog__MinimumLevel__Default: "Information"
 
     notification-service:
-        <<: *dotnet-service
         build:
             context: .
             dockerfile: NotificationsApi/Dockerfile
         container_name: api.NotificationsService
         ports:
             - 5003:8080
+        networks:
+            - consul_app
         depends_on:
             - consul
-            - rabbitmq  
+            - rabbitmq
+        restart: on-failure
         environment:
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Scheme: "http"
             ServiceDiscoveryConfiguration__ConsulConfiguration__Host: "consul"
+            ServiceDiscoveryConfiguration__ConsulConfiguration__Port: "8500"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Scheme: "http"
             ServiceDiscoveryConfiguration__ServiceConfiguration__Host: "notifications-service"
+            ServiceDiscoveryConfiguration__ServiceConfiguration__Port: "8080"
             ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName: "NotificationsApi"
-            RabbitMq__Host: "amqp://api.RabbitMQ:5672"
-            RabbitMq__UserName: "guest"
-            RabbitMq__Password: "guest"
-            RabbitMq__QueueName: "order-created-queue"
+            Messaging__RabbitMq__Host: "amqp://api.RabbitMQ:5672"
+            Messaging__RabbitMq__UserName: "guest"
+            Messaging__RabbitMq__Password: "guest"
+            Messaging__RabbitMq__QueueName: "order-created-queue"
             Logging__LogLevel__Default: "Information"
             Logging__LogLevel__Microsoft: "Warning"
             Serilog__MinimumLevel__Default: "Information"
@@ -126,14 +101,12 @@ services:
             RABBITMQ_DEFAULT_PASS: guest
         networks:
             - consul_app
-        logging: *common-logging
         healthcheck:
-            test: ["CMD-SHELL", "rabbitmqctl status || exit 1"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
-            start_period: 15s
-            
+            test: rabbitmq-diagnostics -q ping
+            interval: 30s
+            timeout: 30s
+            retries: 3
+
     dozzle:
         image: amir20/dozzle:latest
         container_name: api.Dozzle
@@ -143,7 +116,6 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
         networks:
             - consul_app
-        logging: *common-logging
         depends_on:
             - product-service
             - order-service
