@@ -1,15 +1,15 @@
 {
    "containerDefinitions":[
         {
-            "name":"orders-api",
-            "image":"395109667422.dkr.ecr.us-east-1.amazonaws.com/microservices/orderapi:latest",
+            "name":"notifications-api",
+            "image":"395109667422.dkr.ecr.us-east-1.amazonaws.com/microservices/notificationapi:latest",
             "essential":true,
             "portMappings":[
                 {
                    "containerPort": 8080,
                     "hostPort": 8080,
                     "protocol": "tcp",
-                    "name": "orders-api"                 
+                    "name": "notifications-api"                 
                 }
             ],
             "environment":[
@@ -27,11 +27,11 @@
                 },
                 {
                     "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__ServiceName",
-                    "value": "orders-api"
+                    "value": "notifications-api"
                 },
                 {
                     "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Host",
-                    "value": "orders-api"
+                    "value": "notifications-api"
                 },
                 {
                     "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Port",
@@ -44,11 +44,7 @@
                 {
                     "name": "ServiceDiscoveryConfiguration__ServiceConfiguration__Version",
                     "value": "1.0"
-                },
-                {
-                    "name":"ServiceDiscoveryConfiguration__ProductsApiConfiguration__BaseUrl",
-                    "value":"http://products-api:8080"
-                },
+                },                
                 {
                     "name": "ASPNETCORE_ENVIRONMENT",
                     "value": "Development"
@@ -95,7 +91,7 @@
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
-                    "awslogs-group": "/aws/ecs/order-api",
+                    "awslogs-group": "/aws/ecs/notification-api",
                     "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
                 }
@@ -103,7 +99,7 @@
             "systemControls":[]
         }        
     ],
-    "family": "order-api",
+    "family": "notification-api",
     "taskRoleArn": "arn:aws:iam::395109667422:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::395109667422:role/microservices-ecs-task-execution-role",
     "networkMode": "awsvpc",
