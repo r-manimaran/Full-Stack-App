@@ -44,9 +44,10 @@ app.UseSwaggerUI(options =>
 
 app.MapGet("/health", () => Results.Ok("Healthy"));
 
-app.MapGet("/api/products", () =>
+app.MapGet("/api/products", (ILogger<Program> logger) =>
 {
 
+    logger.LogInformation("Fetching all products");
     var faker = new Faker();
 
     var products = Enumerable.Range(1, 10).Select(i => new
@@ -56,6 +57,7 @@ app.MapGet("/api/products", () =>
         Price = Math.Round(faker.Random.Double(5.0, 99.99), 2)
     }).ToArray();
     
+    logger.LogInformation("Returning {ProductCount} products", products.Length);
     return Results.Ok(products);
     
 })
