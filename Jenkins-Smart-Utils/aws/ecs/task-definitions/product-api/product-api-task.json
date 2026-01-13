@@ -16,7 +16,7 @@
             "environment": [
                 {
                     "name": "ServiceDiscoveryConfiguration__ConsulConfiguration__Host",
-                    "value": "172.31.6.190"
+                    "value": "172.31.60.177"
                 },
                 {
                     "name": "ServiceDiscoveryConfiguration__ConsulConfiguration__Port",
@@ -53,6 +53,18 @@
                 {
                     "name": "ASPNETCORE_URLS",
                     "value": "http://+:8080"
+                },
+                {
+                    "name":"Logging__LogLevel__Default",
+                    "value":"Information"
+                },
+                {
+                    "name":"Logging__LogLevel__Microsoft",
+                    "value":"Warning"
+                },
+                {
+                    "name":"Serilog__MinimumLevel__Default",
+                    "value":"Information"
                 }
             ],
             "mountPoints": [],
