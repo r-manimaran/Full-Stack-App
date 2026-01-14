@@ -32,3 +32,24 @@
 ![All Services](image-15.png)
 
 ![Calling ProductApi from Order Api](image-14.png)
+
+![ECR repositories images](image-22.png)
+
+![AWS Cluster Fargate Services](image-20.png)
+
+![ECS Task Definition ](image-21.png)
+
+![AWS Products Service](image-19.png)
+
+![AWS Consul Service Registrations](image-24.png)
+
+![AWS RabbitMQ with 2 connections](image-16.png)
+
+![AWS Order Publishing](image-18.png)
+
+![AWS NotificationApi- Receive Messages](image-17.png)
+
+![AWS RabbitMQ](image-23.png)
+
+
+![Private VPC endpoint](image-25.png)
