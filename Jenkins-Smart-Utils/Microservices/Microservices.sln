@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLib", "SharedLib\Shar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationsApi", "NotificationsApi\NotificationsApi.csproj", "{FB2C2129-0342-4F51-8884-9B7EA56C7E35}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gateway", "gateway\gateway.csproj", "{265D90E5-6867-4004-A745-7B5C76BD1525}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Release|x64.Build.0 = Release|Any CPU
 		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Release|x86.ActiveCfg = Release|Any CPU
 		{FB2C2129-0342-4F51-8884-9B7EA56C7E35}.Release|x86.Build.0 = Release|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Debug|x64.Build.0 = Debug|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Debug|x86.Build.0 = Debug|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Release|x64.ActiveCfg = Release|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Release|x64.Build.0 = Release|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Release|x86.ActiveCfg = Release|Any CPU
+		{265D90E5-6867-4004-A745-7B5C76BD1525}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

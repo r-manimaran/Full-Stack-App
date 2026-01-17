@@ -1,0 +1,19 @@
+{
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId",
+    "DownstreamScheme": "http",
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul",
+      "Scheme": "http",
+      "PollingInterval": 1000,
+      "ConfigurationKey": "AppConfigurationOcelot"
+    },
+    "LoadBalancerOptions": {
+      "Type": "RoundRobin"
+    },
+    "RateLimitOptions": {
+      "EnableRateLimiting": false,
+    }
+}
