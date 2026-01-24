@@ -18,6 +18,6 @@ def call(String path) {
         set -e
         cd ${path}
         npm install
-        ng build --prod
+        ng build --configuration=production
     """
 }
